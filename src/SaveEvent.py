@@ -1,3 +1,4 @@
+import json
 from typing import Optional, List
 from pathvalidate import sanitize_filepath
 from regex import regex as re
@@ -9,8 +10,6 @@ class EventInputError(Exception):
         # Call the base class constructor with the parameters it needs
         super().__init__(message)
 
-        # Now for your custom code...
-        self.errors = errors
 
 
 class EventData ():
@@ -133,15 +132,39 @@ class PersistEvent ():
     """
 
     def __init__(self) -> None:
-        pass
+        self.__filepath = os.getcwd() + "/data/eventdata.json"
 
     def execute(self, in_EventData: EventData):
         event_data = in_EventData.getEvent()
-        # get_next_number
-        # os.mkdir create directory
-        # os.getcwd checks current working directory.
-        # os.walk to find the directory for storing data.
-        # save in .txt seperated by '|' order is: IDnumber,Name,Version,Vieworder,RelatedEvents,BodyText.
+        try:
+        # Step 1: Read the existing data
+            with open(self.__filepath, "r") as file:
+                data:dict = json.load(file)  # Load existing JSON data
+
+        # Ensure the file contains a list
+            if not isinstance(data, dict):
+                raise ValueError("JSON file must contain a list to append objects.")
+
+        # Step 2: Append the new object
+            data.keys()
+            #data.update()
+
+        # Step 3: Write the updated data back to the file
+            with open(self.__filepath, "w") as file:
+                json.dump(data, file, indent=4,sort_keys=True)  # Save with pretty formatting
+
+            print("Object appended successfully!")
+
+        except FileNotFoundError:
+        # If the file doesn't exist, create it with the new object
+            with open(self.__filepath, "w") as file:
+                pass
+                #json.dump([new_object], file, indent=4)
+            
+        except json.JSONDecodeError:
+            print("Error: The file does not contain valid JSON.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 
 if __name__ == '__main__':

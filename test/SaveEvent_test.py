@@ -19,17 +19,6 @@ class EventData_test (unittest.TestCase):
                 self.assertRaises(SaveEvent.EventInputError,
                                 self.Event.setEvent, self.eventdata)
 
-       #def test_02_idnumber(self):
-#            args = ["",
-#                    "12345",
-#                    "123",
-#                    "?!**"
-#                    ]
-#            for arg in args:
-#                self.eventdata["IDnumber"] = arg
-#                self.assertRaises(SaveEvent.EventInputError,
-#                            self.Event.setEvent, self.eventdata)
-
         def test_03_related_EventDatas(self):
             args = ["123", 
                     "abab", 
@@ -94,7 +83,7 @@ class EventData_test (unittest.TestCase):
             self.assertRaises(SaveEvent.EventInputError,
                               self.Event.setEvent, self.eventdata)                       
 
-class PersistData_test(unittest.TestCase):
+class Test_PersistData(unittest.TestCase):
     def setUp(self):
         self.Event = SaveEvent.EventData()
         self.eventdata = self.Event.getEvent()

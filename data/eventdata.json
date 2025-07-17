@@ -1,0 +1,38 @@
+{
+  "0001": {
+    "BodyText": "Lorem ipsum.....",
+    "IDnumber": "0001",
+    "Name": "template",
+    "RelatedEvents": [
+      "0002",
+      "0003",
+      "0004"
+    ],
+    "Version": "01",
+    "ViewOrder": "01"
+  },
+  "0002": {
+    "BodyText": "Lorem ipsum.....2",
+    "IDnumber": "0002",
+    "Name": "templat2",
+    "RelatedEvents": [
+      "0001",
+      "0003",
+      "0004"
+    ],
+    "Version": "01",
+    "ViewOrder": "02"
+  },
+  "0003": {
+    "BodyText": "Lorem ipsum.....2",
+    "IDnumber": "0002",
+    "Name": "templat2",
+    "RelatedEvents": [
+      "0001",
+      "0003",
+      "0004"
+    ],
+    "Version": "01",
+    "ViewOrder": "02"
+  }
+}
