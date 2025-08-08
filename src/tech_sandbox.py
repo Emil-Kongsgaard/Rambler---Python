@@ -1,3 +1,4 @@
+from optparse import Values
 import json, os
 
 mydict_1 = {"Name": "template",
@@ -23,16 +24,27 @@ mydict_3 = {"Name": "templat2",
 
 dict_dict = {"0001":mydict_1, "0003":mydict_2,"0002":mydict_3}
 
-filepath = os.getcwd() + "/data/eventdata.json"
+lv_values = dict_dict.pop("0001")
+print(lv_values)
+
+dict_dict.update({"0004":lv_values})
+print(dict_dict.keys())
+#dict_dict.pop
+
+#print(dict_dict['0002'])
+
+
+
+#filepath = os.getcwd() + "/data/eventdata.json"
 
 #with open(filepath, mode="w", encoding="utf-8") as write_file:
 #    json.dump(dict_dict, write_file,indent=2,sort_keys=True)
 
-with open(filepath, mode="r",encoding="utf-8") as read_file:
-    read_data:dict = json.load(read_file)
+#with open(filepath, mode="r",encoding="utf-8") as read_file:
+#    read_data:dict = json.load(read_file)
 
-set_list_id = list(read_data.keys())
+#set_list_id = list(read_data.keys())
 
-int_list = list(map(int, set_list_id))
+#int_list = list(map(int, set_list_id))
 
-print(int_list)
+#print(int_list)

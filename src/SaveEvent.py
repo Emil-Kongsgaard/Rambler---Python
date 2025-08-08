@@ -1,172 +1,289 @@
+
 import json
+import os
 from typing import Optional, List
-from pathvalidate import sanitize_filepath
 from regex import regex as re
-import os as os
+from src.Exceptions import TextEventError
+from src.constants import Constants
 
 
-class EventInputError(Exception):
-    def __init__(self, message, errors):
-        # Call the base class constructor with the parameters it needs
-        super().__init__(message)
-
-
-
-class EventData ():
-    '''Datacontainer class for events
-    This class should only hold data for events.
-    All data is accesed and retrieved via getter and setter methods.
-    All crud operations is handled by specialized classes like Event_save, etc. 
+class TextEvent ():
     '''
-    __nameMaxLength = 20
-    __idnumberLength = 4
-    __versionLength = 2
-    __viewOrderLength = 2
-    __bodyTextLength = 1000
+    Datacontainer class for text events
+    This class should only hold data for text events.
+    All data is accesed and retrieved via getter and setter methods.
+    All crud operations is handled by specialized classes. 
+    '''
+    _nameMaxLength = 20
+    _idnumberLength = 4
+    _versionLength = 2
+    _viewOrderLength = 2
+    _bodyTextLength = 1000
 
     def __init__(self):
-        self.__name: str = "template"
-        self.__idnumber: str = "0000"
-        self.__related_events: List[str] = []
-        self.__version: str = "00"
-        self.__view_order: str = "00"
-        self.__body_text: str = "lorem ipsum...."
-
-    def __containsLetter(self, iv_string: str) -> bool:
+        self.text_event = {"0000": #idnumber
+                           {
+                               Constants.NAME.value : "template",
+                               Constants.REL_EVENTS.value : [],
+                               Constants.VERSION.value : "00",
+                               Constants.V_ORDER.value : "00",
+                               Constants.B_TEXT.value: "lorem ipsum...."
+                           }}
+        
+    def _containsLetter(self, iv_string: str) -> bool:
         regexresult = re.search('[a-zA-Z]', iv_string)
         if regexresult == None:
             return True
         else:
             return False
 
-    def __containsIllegalChar(self, iv_string: str) -> bool:
+    def _containsIllegalChar(self, iv_string: str) -> bool:
         regexresult = re.search(r'[^\w_. -]', iv_string)
         if regexresult == None:
             return True
         else:
             return False
 
-    def __validateString(self, iv_string: str, iv_stringLength: int):
+    def _validateString(self, iv_string: str, iv_stringLength: int):
         if type(iv_string) != str:
-            raise EventInputError("Input error",
-                                  f"The {iv_string} is of type {type(iv_string)}. Only type string accepted.")
+            raise TextEventError(errors=Constants.INP_ERR.value,
+                                 message=
+                                   f"The {iv_string} is of type {type(iv_string)}. Only type string accepted.")
         elif len(iv_string) != iv_stringLength:
-            raise EventInputError("Input error",
-                                  f"The {iv_string} does not have the correct length of {iv_stringLength}")
-        elif self.__containsLetter(iv_string) == True:
-            raise EventInputError("Input error",
-                                  f"The {iv_string} can only contain digits")
-        elif self.__containsIllegalChar(iv_string) == True:
-            raise EventInputError("Input error",
-                                  f"The {iv_string} can not contain special characthers")
+            raise TextEventError(errors=Constants.INP_ERR.value,
+                                 message=
+                                 f"The {iv_string} does not have the correct length of {iv_stringLength}")
+        elif self._containsLetter(iv_string):
+            raise TextEventError(errors=Constants.INP_ERR.value,
+                                 message=
+                                 f"The {iv_string} can only contain digits")
+        elif self._containsIllegalChar(iv_string):
+            raise TextEventError(errors=Constants.INP_ERR.value,
+                                 message=
+                                 f"The {iv_string} cannot contain special characthers")
 
-    def __setName(self, iv_name: str) -> Optional[None]:
-        if len(iv_name) > self.__nameMaxLength:
-            raise EventInputError(
-                "this is an exception class", "The name is too long")
-        self.__name = sanitize_filepath(iv_name)
+    def setName(self, iv_name: str) -> Optional[None]:
+        self._validateString(iv_name,self._nameMaxLength)
+        self.text_event["0000"][Constants.NAME.value] = iv_name
 
-    def __setIdnumber(self, iv_idnumber: str) -> Optional[None]:
-        try:
-            self.__validateString(iv_idnumber, self.__idnumberLength)
-        except EventInputError as e:
-            raise e
-        self.__idnumber = iv_idnumber
+    def getname(self) -> str:
+        return self.text_event["0000"][Constants.NAME.value]
 
-    def __setRelatedList(self, iv_list: List[str]) -> Optional[None]:
+    def setIdnumber(self, iv_idnumber: str) -> Optional[None]:
+        self._validateString(iv_idnumber, self._idnumberLength)
+        self.text_event = self.text_event.pop("",{iv_idnumber:self.text_event["0000"]})
+
+    def getIdnumber(self) -> str:
+        return_list = list(self.text_event.keys())
+        return return_list[0]
+
+    def setRelatedTextEvents(self, iv_list: List[str]) -> Optional[None]:
         if len(iv_list) == 0:
-            raise EventInputError(
-                "this is an expecetion class", "The input can not be empty")
+            raise TextEventError(
+                errors=Constants.INP_ERR.value,
+                                 message= "The input can not be empty")#TODO: Check the gameplay logic of this?
         for the_entry in iv_list:
-            try:
-                self.__validateString(the_entry, self.__idnumberLength)
-            except EventInputError as e:
-                raise e
-        self.__related_events = iv_list
+            self._validateString(the_entry, self._idnumberLength)
+        self.text_event["0000"][Constants.REL_EVENTS.value] = iv_list
 
-    def __setVersion(self, iv_version: str) -> Optional[None]:
-        try:
-            self.__validateString(iv_version, self.__versionLength)
-        except EventInputError as e:
-            raise e
-        self.__version = iv_version
+    def getRealtedTextEvents(self) -> list:
+        return self.text_event["0000"][Constants.REL_EVENTS.value]
 
-    def __setViewOrder(self, iv_viewOrder: str) -> Optional[None]:
-        try:
-            self.__validateString(iv_viewOrder, self.__viewOrderLength)
-        except EventInputError as e:
-            raise e
-        self.__view_order = iv_viewOrder
+    def setVersion(self, iv_version: str) -> Optional[None]:
+        self._validateString(iv_version, self._versionLength)
+        self.text_event["0000"][Constants.VERSION.value] = iv_version
 
-    def __setBodyText(self, iv_bodytext: str) -> Optional[None]:
-        if len(iv_bodytext) >= self.__bodyTextLength:
-            raise EventInputError(
-                "Input error", f"The event text can not be longer than {self.__bodyTextLength}")
-        self.__body_text = iv_bodytext
+    def getVersion(self) -> str:
+        return self.text_event["0000"][Constants.VERSION.value]
 
-    def setEvent(self, iv_event_dict: dict):
-        try:
-            self.__setName(iv_event_dict["Name"])
-            self.__setRelatedList(iv_event_dict["RelatedEvents"])
-            self.__setVersion(iv_event_dict["Version"])
-            self.__setViewOrder(iv_event_dict["ViewOrder"])
-            self.__setBodyText(iv_event_dict["BodyText"])
-        except EventInputError as e:
-            raise e
+    def setViewOrder(self, iv_viewOrder: str) -> Optional[None]:
+        self._validateString(iv_viewOrder, self._viewOrderLength)
+        self.text_event["0000"][Constants.V_ORDER.value] = iv_viewOrder
 
-    def getEvent(self):
-        template_dict = {"Name": self.__name,
-                         "IDnumber": self.__idnumber,
-                         "RelatedEvents": self.__related_events,
-                         "Version": self.__version,
-                         "ViewOrder": self.__view_order,
-                         "BodyText": self.__body_text}
-        return template_dict
+    def getViewOrder(self) -> str:
+        return self.text_event["0000"][Constants.V_ORDER.value]
+
+    def setBodyText(self, iv_bodytext: str) -> Optional[None]:
+        if len(iv_bodytext) >= self._bodyTextLength:
+            raise TextEventError(errors=Constants.INP_ERR.value,
+                                 message= f"The event text can not be longer than {self._bodyTextLength}")
+        self.text_event["0000"][Constants.B_TEXT.value] = iv_bodytext
+
+    def getBodyText(self) -> str:
+        return self.text_event["0000"][Constants.B_TEXT.value]
+
+    def Save(self):
+        CrudHandler = CRUDEvent()
+        idnumber = self.getIdnumber()
+        if idnumber == "0000":
+            CrudHandler.append(self)   
+        else: 
+            CrudHandler.modify(idnumber, self)
 
 
-class PersistEvent ():
-    """Class for handling the persistance of events. 
-    The class only has one public execute method, which accepts an event class as input.
-    All data validations happens in SaveEvent class. This class handles persistence and assumes static data.
-    On error raises an exception with input data.
+
+    def get(self):
+        
+        Crudhandler = CRUDEvent() 
+        idnumber = self.getIdnumber()
+        text_event = Crudhandler.get(idnumber)
+        self.setName(text_event[Constants.NAME.value])
+        self.setRelatedTextEvents(text_event[Constants.REL_EVENTS.value])
+        self.setVersion(text_event[Constants.VERSION.value])
+        self.setViewOrder(text_event[Constants.V_ORDER.value])
+        self.setBodyText(text_event[Constants.B_TEXT.value])
+
+
+
+    def delete(self):
+        Crudhandler = CRUDEvent() 
+        idnumber = self.getIdnumber()
+        Crudhandler.delete(idnumber)
+
+        
+
+
+class JSONFileHandling():
+    """
+    Abstract class for handling JSON I/O operations during CRUD for TextEvents. 
+    Is implemented in TextEvent CRUD class which handles business logic
     """
 
     def __init__(self) -> None:
-        self.__filepath = os.getcwd() + "/data/eventdata.json"
+        raise TextEventError(message="An attempt to instantiate an abstract class was made",
+                             errors=Constants.SYS_ERR.value)
 
-    def execute(self, in_EventData: EventData):
-        event_data = in_EventData.getEvent()
+    def _read_json_file(self, filepath: str) -> dict:
+        """
+        Read:
+        Attempts to read input filepath as a json file which consist of a dict. 
+        Returns empty dict if the filepath is invalid. 
+        Raises TextEventError on all other error cases. 
+        """
+        event_data = {}
         try:
-        # Step 1: Read the existing data
-            with open(self.__filepath, "r") as file:
-                data:dict = json.load(file)  # Load existing JSON data
-
-        # Ensure the file contains a list
-            if not isinstance(data, dict):
-                raise ValueError("JSON file must contain a list to append objects.")
-
-        # Step 2: Append the new object
-            data.keys()
-            #data.update()
-
-        # Step 3: Write the updated data back to the file
-            with open(self.__filepath, "w") as file:
-                json.dump(data, file, indent=4,sort_keys=True)  # Save with pretty formatting
-
-            print("Object appended successfully!")
-
+            with open(filepath, "r") as file:
+                event_data = json.load(file)
+            if not isinstance(event_data, dict):
+                raise ValueError(
+                    "JSON file must contain a dict to append objects.")
         except FileNotFoundError:
-        # If the file doesn't exist, create it with the new object
-            with open(self.__filepath, "w") as file:
-                pass
-                #json.dump([new_object], file, indent=4)
-            
-        except json.JSONDecodeError:
-            print("Error: The file does not contain valid JSON.")
+            pass  # a new file should be created during the persist
         except Exception as e:
-            print(f"An error occurred: {e}")
+            raise TextEventError(message=f"An error occurred during json read: {e}",
+                                 errors=Constants.SYS_ERR.value)
+        return event_data
+
+    def _create_update_json_file(self, filepath: str, dict) -> None:
+        """
+        Create / Update
+        Attemps to create using filepath and dict. 
+        Raises TextEventError in all non-ok cases. 
+        """
+        try:
+            with open(filepath, "w") as file:
+                json.dump(
+                    dict, file, indent=Constants.JSON_INDENT.value, sort_keys=True)
+        except Exception as e:
+            raise TextEventError(message=f"An error occurred during json update/create: {e}",
+                                 errors=Constants.SYS_ERR.value)
+
+    def _delete_json_file(self, filepath: str):
+        """
+        Delete
+        Attemps to delete a given filepath. 
+        Raises TextEventError if if is not a recognized file. 
+        """
+        if os.path.isfile(filepath):
+            os.remove(filepath)
+        else:
+            raise TextEventError(message=f"An attempt failed to delete the file {filepath}",
+                                 errors=Constants.SYS_ERR.value)
+
+    def _get_next_number(self, filepath: str) -> str:
+        Cache = CurrentNumberCache()
+        current_number = Cache.get_current_number()
+        if current_number == None:
+            all_text_events = self._read_json_file(filepath)
+            all_keys = list(all_text_events.keys())
+            int_list = list(map(int, all_keys))
+            int_list.sort()
+            next_number = int_list[-1] + 1
+        else:
+            next_number = current_number + 1
+        Cache.set_next_number(next_number)
+        next_number = str(next_number)
+        return next_number
+
+
+class CRUDEvent (JSONFileHandling):
+    """
+    Handles CRUD operations of Text Events. 
+    All methods are dependent on the data structure for TextEvents as
+    defined in the init methods of the main class. 
+    """
+
+    def __init__(self) -> None:
+        self._filepath = os.getcwd() + "/data/eventdata.json"
+
+    def append(self, in_text_event: TextEvent):
+        """
+        Raises TextEventError on error
+        """
+        # get correct idnumber.
+        idnumb = self._get_next_number(self._filepath)
+        in_text_event.setIdnumber(idnumb)
+        all_text_events = self._read_json_file(self._filepath)
+        all_text_events.update(in_text_event.text_event)
+
+        self._create_update_json_file(self._filepath, all_text_events)
+
+    def modify(self, idnumber:str, in_text_event: TextEvent):
+        """
+        Modify an existing event
+        """
+        all_text_events = self._read_json_file(self._filepath)
+        # Update value for key in all text events
+        all_text_events[idnumber] = in_text_event.text_event[idnumber]
+
+        self._create_update_json_file(self._filepath, all_text_events)
+
+    def delete(self, idnumber:str):
+        """
+        Delete a Text event permanently
+        """
+        all_text_events = self._read_json_file(self._filepath)
+        all_text_events.pop(idnumber)
+        self._create_update_json_file(self._filepath, all_text_events)
+
+    def get(self, idnumber:str):
+        """
+        Gets / reads an event from file. 
+        """
+        all_text_events = self._read_json_file(self._filepath)
+        return all_text_events[idnumber]
+
+
+class CurrentNumberCache:
+    _instance = None
+    _current_number = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(CurrentNumberCache, cls).__new__(
+                cls, *args, **kwargs)
+        return cls._instance
+
+    def get_current_number(self):
+        if self._current_number == None:
+            return None
+        else:
+            return self._current_number
+
+    def set_next_number(self, number: int):
+        self._current_number = number
 
 
 if __name__ == '__main__':
     print("main")
-    print(os.getcwd())
+
