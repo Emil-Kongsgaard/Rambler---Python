@@ -281,7 +281,11 @@ class CurrentNumberCache:
             return self._current_number
 
     def set_next_number(self, number: int):
-        self._current_number = number
+        if int == type(number):
+            self._current_number = number
+        else:
+            raise TextEventError(errors=Constants.SYS_ERR.value,
+                                 message="Input must be a number")
 
 
 if __name__ == '__main__':
