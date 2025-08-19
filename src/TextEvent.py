@@ -33,16 +33,16 @@ class TextEvent ():
     def _containsLetter(self, iv_string: str) -> bool:
         regexresult = re.search('[a-zA-Z]', iv_string)
         if regexresult == None:
-            return True
-        else:
             return False
+        else:
+            return True
 
     def _containsIllegalChar(self, iv_string: str) -> bool:
         regexresult = re.search(r'[^\w_. -]', iv_string)
         if regexresult == None:
-            return True
-        else:
             return False
+        else:
+            return True
 
     def _validateString(self, iv_string: str, iv_stringLength: int):
         if type(iv_string) != str:
@@ -161,6 +161,8 @@ class JSONFileHandling():
         Raises TextEventError on all other error cases. 
         """
         event_data = {}
+        if not os.path.isfile(filepath):
+            return event_data
         try:
             with open(filepath, "r") as file:
                 event_data = json.load(file)
@@ -224,7 +226,7 @@ class CRUDEvent (JSONFileHandling):
     """
 
     def __init__(self) -> None:
-        self._filepath = os.getcwd() + "/data/eventdata.json"
+        self._filepath = Constants.JSON_FILEPATH.value
 
     def append(self, in_text_event: TextEvent):
         """

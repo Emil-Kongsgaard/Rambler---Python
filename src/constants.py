@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 
 class Constants(Enum):
@@ -7,6 +8,7 @@ class Constants(Enum):
     
     #JSON file handling:
     JSON_INDENT = 4
+    JSON_FILEPATH = os.getcwd() + "/data/eventdata.json"
 
     #TextEvent:
     NAME = "Name"

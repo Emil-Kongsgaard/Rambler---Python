@@ -3,8 +3,11 @@ import json
 import os
 from unittest import mock
 from unittest.mock import MagicMock
+
+from traitlets import Instance
 from src.Exceptions import TextEventError
-from src.TextEvent import CurrentNumberCache, JSONFileHandling,TextEvent
+from src.TextEvent import CRUDEvent, CurrentNumberCache, JSONFileHandling,TextEvent
+from src.constants import Constants
 
 class test_CurrentNumberCache(unittest.TestCase):
     def setUp(self) -> None:
@@ -51,6 +54,7 @@ class test_JSONFileHandling(unittest.TestCase):
         
     def tearDown(self) -> None:
         return None
+    
     @unittest.expectedFailure #The class is patched in setup - so this should fail
     def test_01_no_instance(self):
         with self.assertRaises(TextEventError):
@@ -59,6 +63,7 @@ class test_JSONFileHandling(unittest.TestCase):
     def test_02_read_file(self):
         dict = self.instance._read_json_file("not a filepath")
         self.assertEqual(dict,{},"Read_file does not return empty dict when file is not found")
+        
 
     def test_03_read_file(self):
         filepath = os.getcwd() + "/data/testdata.txt"
@@ -80,6 +85,7 @@ class test_JSONFileHandling(unittest.TestCase):
     def test_05_create_file(self):
         with self.assertRaises(TextEventError):
             self.instance._create_update_json_file("not a file path",dict)
+        os.remove(os.getcwd() +"/not a file path")
 
     def test_06_create_file(self):
         my_dict = {"this should not":"exist outside of testing"}
@@ -126,6 +132,99 @@ class test_JSONFileHandling(unittest.TestCase):
 
     
 # CRUDEvent
+class test_CRUDEvent(unittest.TestCase):
+    def setUp(self) -> None:
+        self.instance = CRUDEvent()
+        return None
+    def tearDown(self) -> None:
+        return None
+    def test_01_init(self):
+        obj = CRUDEvent()
+        self.assertEqual(first=obj._filepath, second=Constants.JSON_FILEPATH.value,msg="CRUDevent is not instantiated correctly")
+
+    def test_02_append_idnumber(self):
+        event = TextEvent()
+        #setup
+        self.instance._get_next_number = MagicMock(return_value="0005")
+        self.instance._read_json_file = MagicMock(return_value={})
+        self.instance._create_update_json_file = MagicMock()
+
+        #Action
+        self.instance.append(event)
+        idnumber = event.getIdnumber()
+
+        #Assert
+        self.assertEqual(idnumber,"0005","Idnumber was not assigned correctly to textevent")
+        self.instance._get_next_number.assert_called_once()
+        self.instance._read_json_file.assert_called_once()
+        self.instance._create_update_json_file.assert_called_once_with(Constants.JSON_FILEPATH.value,event.text_event)
+    
+    def test_03_append_raises(self):
+        event=TextEvent()
+        #setupmocks
+        self.instance._get_next_number = MagicMock(return_value="0005")
+        self.instance._read_json_file = MagicMock(return_value={})
+        
+        self.instance._create_update_json_file = MagicMock()
+        self.instance._create_update_json_file.side_effect = TextEventError(errors="TEST ERROR",message="this is a exception for testing")
+
+        #action
+        with self.assertRaises(TextEventError):
+            self.instance.append(event)
+        
+        #assert
+        self.instance._get_next_number.assert_called_once()
+        self.instance._read_json_file.assert_called_once()
+        self.instance._create_update_json_file.assert_called_once_with(Constants.JSON_FILEPATH.value,event.text_event)
+    
+    @mock.patch.object(CRUDEvent, '_create_update_json_file')
+    @mock.patch.object(CRUDEvent, '_read_json_file')
+    def test_04_modify(self, mock_read, mock_write):
+        # Arrange
+        idnumber = "1"
+        mock_read.return_value = {"1": {"old": "data"}}
+        fake_event = MagicMock()
+        fake_event.text_event = {idnumber: {"new": "data"}}
+
+        # Act
+        self.instance.modify(idnumber, fake_event)
+
+        # Assert
+        expected = {"1": {"new": "data"}}
+        mock_write.assert_called_once_with(self.instance._filepath, expected)
+
+    @mock.patch.object(CRUDEvent, '_create_update_json_file')
+    @mock.patch.object(CRUDEvent, '_read_json_file')
+    def test_05_delete(self, mock_read, mock_write):
+        # Arrange
+        idnumber = "2"
+        mock_read.return_value = {
+            "1": {"name": "event1"},
+            "2": {"name": "event2"}
+        }
+
+        # Act
+        self.instance.delete(idnumber)
+
+        # Assert
+        expected = {"1": {"name": "event1"}}  # "2" removed
+        mock_write.assert_called_once_with(self.instance._filepath, expected)
+
+    @mock.patch.object(CRUDEvent, '_read_json_file')
+    def test_06_get(self, mock_read):
+        # Arrange
+        idnumber = "3"
+        mock_read.return_value = {
+            "3": {"name": "event3"}
+        }
+
+        # Act
+        result = self.instance.get(idnumber)
+
+        # Assert
+        self.assertEqual(result, {"name": "event3"})
+        mock_read.assert_called_once_with(self.instance._filepath)
+
 
 if __name__ == '__main__':
     unittest.main()
