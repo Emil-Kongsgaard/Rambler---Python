@@ -4,12 +4,11 @@ from src.constants import Constants
 
 class Buttons():
 
-    def __init__(self, surface:pygame.Surface, rect:pygame.Rect,text:str,function,state:str):
-        self.surface = surface
-        self._outer_rect = rect
-        self.text = text
-        self.clicked = {'action':function}
-        self.state = state
+    def __init__(self, iv_button:dict ):
+        self.surface = iv_button["surface"]
+        self._outer_rect = iv_button["rect"]
+        self.text = iv_button["title"]
+        self.state = iv_button["state"]
         self.font = Constants.FONT.value
         self.font_size = Constants.F_SIZE.value
         self.font_color = Constants.F_COLOR.value
@@ -18,7 +17,7 @@ class Buttons():
         self.HIG_color = Constants.HIGHLIGHTED_COLOR.value
         return None
              
-    def render(self): 
+    def render(self):
         match self.state:
             case Constants.DISABLED.value:
                 color = self.DIS_color
