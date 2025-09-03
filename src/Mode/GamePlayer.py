@@ -6,7 +6,7 @@ class GamePlayer():
     """
     def __init__(self) -> None:
         raise NotImplementedError
-    def loadScreenRequested(self):
+    def loadScreenRequested(self,screen_name:str):
         pass
     def gameWon(self):
         pass

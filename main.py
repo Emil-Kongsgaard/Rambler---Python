@@ -3,6 +3,7 @@
 # the switch between screens.
 # the actual endgame, gamewon, "save?game?" implementations. 
 import os
+from src.Screens.CharSelect import CharSelect
 import pygame
 from src.Screens.MainMenu import MainMenu
 from src.Mode.GamePlayer import GamePlayer
@@ -17,16 +18,19 @@ class UserInterface(GamePlayer):
         pygame.display.set_caption(Constants.Caption.value)
         self.clock = pygame.time.Clock()
         self.running = True
+        self.current_screen = "MainMenu"
+        self.mainmenu = MainMenu(self.screen)
+        self.mainmenu.addObserver(self)
     
     def run(self):
-        self.current_screen = "MainMenu"
-        mainmenu = MainMenu(self.screen)
-        mainmenu.addObserver(self)
+
 
         while self.running:
             match self.current_screen:
-                case "MainMenu":
-                    mainmenu.run()
+                case Constants.MainMenu.value:
+                    self.mainmenu.run()
+                case Constants.CharacterSel.value:
+                    self.CharSelect.run()   
                 case _:
                     pygame.quit()
 
@@ -38,6 +42,20 @@ class UserInterface(GamePlayer):
     def quitRequested(self):
         self.running = False
         return None
+    
+    def loadScreenRequested(self,screen_name:str):
+        match screen_name:
+            case Constants.MainMenu.value:
+                pass 
+                #The mainmenu screen is created and observer is added during init
+            case Constants.CharacterSel.value:
+                self.CharSelect = CharSelect(self.screen)
+                self.CharSelect.addObserver(self)
+            case _:
+                pass
+        
+        self.current_screen = screen_name
+
     
 
 if __name__ == '__main__':

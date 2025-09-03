@@ -19,7 +19,7 @@ class Constants(Enum):
 
     #Text
     FONT = os.path.join("Assets","DuBellay-4B1Y.ttf")
-    F_SIZE = 24
+    F_SIZE = 24 # there can be 17 characters in a button with this font
     F_COLOR = (100,100,100)
 
     #Buttons
@@ -39,3 +39,7 @@ class Constants(Enum):
     Window_size = (1280, 720)
     Caption = "Rambler"
     Clock = 60
+
+    #Screens
+    MainMenu = "MainMenu"
+    CharacterSel = "CharacterSelection"

@@ -1,7 +1,6 @@
 
 import pygame
-from src.Screens.Buttons import Buttons
-from src.Screens.Screens import Screen
+from src.Screens.Utils import Buttons, Screen
 from src.constants import Constants
 
 
@@ -9,11 +8,11 @@ class MainMenu(Screen):
 
     def __init__(self,screen):
         super().__init__(screen)
-        self._menuitems = {"Play": 
+        self.Buttons = {"Play": 
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Play", 
-                       "function": lambda: print("somefunction"), 
+                       "function": lambda: self.notifyLoadScreenRequested(Constants.CharacterSel.value), 
                        "state": Constants.ENABLED.value},
                        "Load": 
                        {"surface": self.screen, 
@@ -37,9 +36,6 @@ class MainMenu(Screen):
             Constants.Placeholder_img.value)
         return None
 
-    def _render_images(self) -> None:
-        self.screen.blit(self.background_image, Constants.background_xy.value)
-
     def _render(self):
         # build Rects for all the buttons defined in __init__
         # plus Rect for title. 
@@ -51,9 +47,9 @@ class MainMenu(Screen):
         title_rect = title_surface.get_rect()
         title_rect.center = (screen_rect.centerx, (screen_rect.y + self.menu_y_dist))
         i = 2
-        for key in self._menuitems.keys():
-            self._menuitems[key]["rect"] = pygame.Rect(0,0,(screen_rect.w * self.rect_x_multiplier),self.rect_y)
-            self._menuitems[key]["rect"].center = (screen_rect.centerx, (screen_rect.y + (self.menu_y_dist * i )))
+        for key in self.Buttons.keys():
+            self.Buttons[key]["rect"] = pygame.Rect(0,0,(screen_rect.w * self.rect_x_multiplier),self.rect_y)
+            self.Buttons[key]["rect"].center = (screen_rect.centerx, (screen_rect.y + (self.menu_y_dist * i )))
             i += 1
 
         # render
@@ -61,43 +57,15 @@ class MainMenu(Screen):
         self._render_images()
         self.screen.blit(title_surface, title_rect)
 
-        play_button = Buttons(self._menuitems["Play"])
-        load_button = Buttons(self._menuitems["Load"])
-        quit_button = Buttons(self._menuitems["Quit"])
+        play_button = Buttons(self.Buttons["Play"])
+        load_button = Buttons(self.Buttons["Load"])
+        quit_button = Buttons(self.Buttons["Quit"])
 
-        self.play_but_rect = play_button.render()
-        self.load_but_rect = load_button.render()
-        self.quit_byt_rect = quit_button.render()
+        play_button.render()
+        load_button.render()
+        quit_button.render()
 
         return None
-
-    def _processInput(self):
-        for event in pygame.event.get():
-            self._checkForQuit(event)
-            self._highligt_buttons(event)
-            self._handle_button_click(event)
-
-    def _handle_button_click(self, event):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            for key in self._menuitems.keys():
-                if self._menuitems[key]["state"] == Constants.DISABLED.value:
-                    continue
-                if self._menuitems[key]["rect"].collidepoint(pygame.mouse.get_pos()):
-                    try:  
-                        self._menuitems[key]["function"]()
-                    except Exception as e:
-                        pass
-
-    def _highligt_buttons(self, event):
-        if event.type == pygame.MOUSEMOTION:
-            for key in self._menuitems.keys():
-                if self._menuitems[key]["state"] == Constants.DISABLED.value:
-                    continue
-                if self._menuitems[key]["rect"].collidepoint(pygame.mouse.get_pos()):
-                    self._menuitems[key]["state"] = Constants.HIGHLIGHTED.value
-                else: 
-                    self._menuitems[key]["state"] = Constants.ENABLED.value
-
 
     def _update(self):
         pass

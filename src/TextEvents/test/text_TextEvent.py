@@ -4,7 +4,6 @@ import os
 from unittest import mock
 from unittest.mock import MagicMock
 
-from traitlets import Instance
 from src.Exceptions import TextEventError
 from src.TextEvent import CRUDEvent, CurrentNumberCache, JSONFileHandling,TextEvent
 from src.constants import Constants

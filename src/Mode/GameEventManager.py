@@ -9,9 +9,9 @@ class EventManager():
         self.__observers = []
     def addObserver(self, observer):
         self.__observers.append(observer)
-    def notifyLoadScreenRequested(self):
+    def notifyLoadScreenRequested(self,screen_name:str):
         for observer in self.__observers:
-            observer.loadScreenRequested()
+            observer.loadScreenRequested(screen_name)
     def notifyGameWon(self):
         for observer in self.__observers:
             observer.gameWon()
