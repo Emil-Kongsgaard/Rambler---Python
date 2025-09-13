@@ -3,6 +3,7 @@
 # the switch between screens.
 # the actual endgame, gamewon, "save?game?" implementations. 
 import os
+from src.Screens.Figth import Figth_screen
 from src.Screens.CharSelect import CharSelect
 import pygame
 from src.Screens.MainMenu import MainMenu
@@ -18,9 +19,14 @@ class UserInterface(GamePlayer):
         pygame.display.set_caption(Constants.Caption.value)
         self.clock = pygame.time.Clock()
         self.running = True
+
+        # initialize menu
         self.current_screen = "MainMenu"
         self.mainmenu = MainMenu(self.screen)
         self.mainmenu.addObserver(self)
+
+        Text_events = []
+        
     
     def run(self):
 
@@ -30,7 +36,9 @@ class UserInterface(GamePlayer):
                 case Constants.MainMenu.value:
                     self.mainmenu.run()
                 case Constants.CharacterSel.value:
-                    self.CharSelect.run()   
+                    self.CharSelect.run()
+                case Constants.Figth.value:
+                    self.Figth.run()   
                 case _:
                     pygame.quit()
 
@@ -51,6 +59,9 @@ class UserInterface(GamePlayer):
             case Constants.CharacterSel.value:
                 self.CharSelect = CharSelect(self.screen)
                 self.CharSelect.addObserver(self)
+            case Constants.Figth.value:
+                    self.Figth = Figth_screen(self.screen)
+                    self.Figth.addObserver(self)   
             case _:
                 pass
         

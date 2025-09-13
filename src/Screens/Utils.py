@@ -16,10 +16,10 @@ class Screen(EventManager):
         self._load_images()
 
     def _load_images(self) -> None:
-        raise NotImplemented
+        pass
 
     def _render(self) -> None:
-        raise NotImplemented
+        pass
 
     def _processInput(self):
         for event in pygame.event.get():
@@ -28,7 +28,7 @@ class Screen(EventManager):
             self._handle_button_click(event)
 
     def _update(self) -> None:
-        raise NotImplemented
+        pass
     
     def run(self):
         self._render()
@@ -44,11 +44,13 @@ class Screen(EventManager):
             for key in self.Buttons.keys():
                 if self.Buttons[key]["state"] == Constants.DISABLED.value:
                     continue
-                if self.Buttons[key]["rect"].collidepoint(pygame.mouse.get_pos()):
-                    try:  
-                        self.Buttons[key]["function"]()
-                    except Exception as e:
-                        pass
+                if self.Buttons[key]["rect"].collidepoint(pygame.mouse.get_pos()): 
+                        for func_key in  self.Buttons[key]["function"].keys():
+                            #The "function" holds a dict of lambda functions 
+                            try:
+                                self.Buttons[key]["function"][func_key]()
+                            except Exception as e:
+                                pass
     def _render_images(self) -> None:
         self.screen.blit(self.background_image, Constants.background_xy.value)
 
@@ -122,33 +124,36 @@ class Buttons():
         return self.text_rect
 
 class TextBox():
-    def __init__(self) -> None:
-        self.Buttons = {"Play": 
+    def __init__(self,screen:pygame.Surface,Textevent) -> None:
+        self.screen = screen
+        self.Buttons = {"Positive_option": 
                       {"surface": self.screen, 
                        "rect": "rect", 
-                       "title": "Play", 
-                       "function": lambda: self.notifyLoadScreenRequested(Constants.CharacterSel.value), 
+                       "title": "Positive", 
+                       "function": lambda: print("positive"), 
                        "state": Constants.ENABLED.value},
-                       "Load": 
+                       "Go_to_Next_text": 
                        {"surface": self.screen, 
                        "rect": "rect", 
-                       "title": "Load a save", 
+                       "title": "More...", 
                        "function": lambda: print("somefunction"), 
-                       "state": Constants.DISABLED.value},
-                       "Quit": 
+                       "state": Constants.ENABLED.value},
+                       "Negative_option": 
                        {"surface": self.screen, 
                        "rect": "rect", 
-                       "title": "Quit", 
-                       "function": lambda: self.notifyQuitRequested(), 
+                       "title": "negative", 
+                       "function": lambda: print("negative"), 
                        "state": Constants.ENABLED.value}
                       }
+        self.screen_rect = self.screen.get_rect()
         self.menu_y_dist = 90
         self.rect_x_multiplier = 0.2
         self.rect_y = 60
+        self.body_text = "aaaa"
 
     def render(self):
         textbox_outer = pygame.Rect(0,0,500,600)
-        textbox_outer.center = screen_rect.center
+        textbox_outer.center = self.screen_rect.center
         inner_margin = Constants.INNER_MARGIN.value
         inner_x = textbox_outer.x + inner_margin
         inner_y = textbox_outer.y + inner_margin
@@ -164,25 +169,25 @@ class TextBox():
         title_rect.center = (textbox_outer.centerx, (textbox_outer.y + 30))
 
         # draw
-        pygame.draw.rect(self.window,Constants.HIGHLIGHTED_COLOR.value,(textbox_outer),width=15)
-        pygame.draw.rect(self.window,Constants.INNER_COLOR.value,inner_rect)
-        self.window.blit(title_surface,(title_rect))
+        pygame.draw.rect(self.screen,Constants.HIGHLIGHTED_COLOR.value,(textbox_outer),width=15)
+        pygame.draw.rect(self.screen,Constants.INNER_COLOR.value,inner_rect)
+        self.screen.blit(title_surface,(title_rect))
 
         tb_text_font = pygame.font.Font(Constants.FONT.value, 18)
         y_diff = (textbox_outer.h - (title_rect.h + 30))
         new_line_start = 0
         line_no = 0
-        for i in range(len(lorem_ipsum)):
-            text_str = lorem_ipsum[new_line_start:i]
+        for i in range(len(self.body_text)):
+            text_str = self.body_text[new_line_start:i]
             (w,h) = tb_text_font.size(text_str)
             if (textbox_outer.w-40) < w < (textbox_outer.w-25):
                 if text_str.endswith((" ",".",",","-")):
                     pass
                 elif " " == text_str[-2]:
-                    text_str = lorem_ipsum[new_line_start:(i-2)]
+                    text_str = self.body_text[new_line_start:(i-2)]
                     i = i-1
                 else: 
-                    text_str = lorem_ipsum[new_line_start:(i-1)] + "-"
+                    text_str = self.body_text[new_line_start:(i-1)] + "-"
                     i = i-1
                 new_line_start = i
                 text_surface = tb_text_font.render(
@@ -190,17 +195,17 @@ class TextBox():
                 text_rect = text_surface.get_rect()
                 text_rect.left = (textbox_outer.x+15)
                 text_rect.top = textbox_outer.y+50 + ( 30 * line_no) 
-                self.window.blit(text_surface,(text_rect))
+                self.screen.blit(text_surface,(text_rect))
                 line_no = line_no +1
-            elif i == (len(lorem_ipsum)-1): 
+            elif i == (len(self.body_text)-1): 
                 #to handle last line of text 
-                text_str = lorem_ipsum[new_line_start:]
+                text_str = self.body_text[new_line_start:]
                 text_surface = tb_text_font.render(
                 text_str, True, Constants.F_COLOR.value)
                 text_rect = text_surface.get_rect()
                 text_rect.left = (textbox_outer.x+15)
                 text_rect.top = textbox_outer.y+50 + ( 30 * line_no) 
-                self.window.blit(text_surface,(text_rect))
+                self.screen.blit(text_surface,(text_rect))
                 line_no = line_no +1
             else:
                 pass   

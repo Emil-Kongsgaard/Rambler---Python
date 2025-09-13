@@ -41,5 +41,9 @@ class Constants(Enum):
     Clock = 60
 
     #Screens
+    Button_width_multp = 0.2
+    Buttons_y = 60
     MainMenu = "MainMenu"
     CharacterSel = "CharacterSelection"
+    Figth = "Figth"
+

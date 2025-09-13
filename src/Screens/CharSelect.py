@@ -11,40 +11,46 @@ class CharSelect(Screen):
                         {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Farmer", 
-                       "function": lambda: print("somefunction"), 
+                       "function":{ "1":   lambda: print("somefunction"),
+                                    "2":   lambda: self.notifyLoadScreenRequested(Constants.Figth.value)
+                                }, 
                        "state": Constants.ENABLED.value},
                        "Character_2": 
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Young soldier", 
-                       "function": lambda: print("somefunction"), 
+                       "function": { "1":   lambda: print("somefunction"),
+                                    "2":   lambda: self.notifyLoadScreenRequested(Constants.Figth.value)
+                                }, 
                        "state": Constants.ENABLED.value},
                         "Character_3": 
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Veteran Officer", 
-                       "function": lambda: print("somefunction"), 
+                       "function": { "1":   lambda: print("somefunction"),
+                                    "2":   lambda: self.notifyLoadScreenRequested(Constants.Figth.value)
+                                }, 
                        "state": Constants.ENABLED.value},
                         "Character_4": 
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Yx. Bounty Hunter", 
-                       "function": lambda: print("somefunction"), 
+                       "function": { "1":   lambda: print("somefunction"),
+                                    "2":   lambda: self.notifyLoadScreenRequested(Constants.Figth.value)
+                                }, 
                        "state": Constants.ENABLED.value},
                        "Back": 
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Go Back", 
-                       "function": lambda: self.notifyLoadScreenRequested(Constants.MainMenu.value), 
+                       "function": { "1":   lambda: print("somefunction"),
+                                     "2": lambda: self.notifyLoadScreenRequested(Constants.MainMenu.value)
+                                }, 
                        "state": Constants.ENABLED.value},
                        }
         # TODO: Implement some install-spefic logic that determines
         # if the buttons should be disabled. 
         # Eg, you have died as a farmer, now you can play as young soldier
-
-        #local constants for placement of buttons
-        self.rect_x_multiplier = 0.2
-        self.rect_y = 60
 
     def _load_images(self) -> None:
         self.background_image = pygame.image.load(
@@ -61,7 +67,7 @@ class CharSelect(Screen):
         title_rect.center = (screen_rect.centerx, (screen_rect.y + 90))
         # The rects should be positioned in a scattered way
         for key in self.Buttons.keys():
-            self.Buttons[key]["rect"] = pygame.Rect(0,0,(screen_rect.w * self.rect_x_multiplier),self.rect_y)
+            self.Buttons[key]["rect"] = pygame.Rect(0,0,(screen_rect.w * Constants.Button_width_multp.value),Constants.Buttons_y.value)
         self.Buttons["Character_1"]["rect"].center = (int(screen_rect.w * 0.33),int(screen_rect.h * 0.25))
         self.Buttons["Character_2"]["rect"].center = (int(screen_rect.w * 0.48),int(screen_rect.h * 0.35))
         self.Buttons["Character_3"]["rect"].center = (int(screen_rect.w * 0.67),int(screen_rect.h * 0.22))

@@ -27,4 +27,4 @@ class EventManager():
     def update(self):
         raise NotImplementedError()
     def render(self):
-        raise NotImplementedError()
+        pass

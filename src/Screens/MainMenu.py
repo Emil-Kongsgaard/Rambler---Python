@@ -12,24 +12,25 @@ class MainMenu(Screen):
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Play", 
-                       "function": lambda: self.notifyLoadScreenRequested(Constants.CharacterSel.value), 
+                       "function":{ "1": lambda: self.notifyLoadScreenRequested(Constants.CharacterSel.value)
+                                } , 
                        "state": Constants.ENABLED.value},
                        "Load": 
                        {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Load a save", 
-                       "function": lambda: print("somefunction"), 
+                       "function":{ "1":  lambda: print(None)
+                                } , 
                        "state": Constants.DISABLED.value},
                        "Quit": 
                        {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Quit", 
-                       "function": lambda: self.notifyQuitRequested(), 
+                       "function":{ "1":  lambda: self.notifyQuitRequested()
+                                    } , 
                        "state": Constants.ENABLED.value}
                       }
         self.menu_y_dist = 90
-        self.rect_x_multiplier = 0.2
-        self.rect_y = 60
 
     def _load_images(self):
         self.background_image = pygame.image.load(
@@ -48,7 +49,7 @@ class MainMenu(Screen):
         title_rect.center = (screen_rect.centerx, (screen_rect.y + self.menu_y_dist))
         i = 2
         for key in self.Buttons.keys():
-            self.Buttons[key]["rect"] = pygame.Rect(0,0,(screen_rect.w * self.rect_x_multiplier),self.rect_y)
+            self.Buttons[key]["rect"] = pygame.Rect(0,0,(screen_rect.w * Constants.Button_width_multp.value),Constants.Buttons_y.value)
             self.Buttons[key]["rect"].center = (screen_rect.centerx, (screen_rect.y + (self.menu_y_dist * i )))
             i += 1
 
