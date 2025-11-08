@@ -25,7 +25,10 @@ class UserInterface(GamePlayer):
         self.mainmenu = MainMenu(self.screen)
         self.mainmenu.addObserver(self)
 
-        Text_events = []
+
+        Text_events_queue = []
+
+        
         
     
     def run(self):

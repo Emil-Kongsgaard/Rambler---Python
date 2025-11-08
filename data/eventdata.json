@@ -1,38 +1,67 @@
 {
-  "0001": {
-    "BodyText": "Lorem ipsum.....",
-    "IDnumber": "0001",
-    "Name": "template",
-    "RelatedEvents": [
-      "0002",
-      "0003",
-      "0004"
-    ],
-    "Version": "01",
-    "ViewOrder": "01"
-  },
-  "0002": {
-    "BodyText": "Lorem ipsum.....2",
-    "IDnumber": "0002",
-    "Name": "templat2",
-    "RelatedEvents": [
-      "0001",
-      "0003",
-      "0004"
-    ],
-    "Version": "01",
-    "ViewOrder": "02"
-  },
-  "0003": {
-    "BodyText": "Lorem ipsum.....2",
-    "IDnumber": "0002",
-    "Name": "templat2",
-    "RelatedEvents": [
-      "0001",
-      "0003",
-      "0004"
-    ],
-    "Version": "01",
-    "ViewOrder": "02"
-  }
+    "0000": {
+        "IDnumber": "0000",
+        "Name": "template",
+        "RelatedEvents": [],
+        "Version": "00",
+        "ViewOrder": "00",
+        "BodyText": "lorem ipsum....",
+        "PosTitle": "Positive_option_title",
+        "PosFunctions": {
+            "1": "ACTION_NEW_SCREEN:Figth_someparam",
+            "2": "ACTION_NEW_SCREEN:Figth_someparam"
+        },
+        "PosButtonState": "E",
+        "NegTitle": "Negative_option_title",
+        "NegFunctions": {
+            "1": "ACTION_NEW_SCREEN:Figth_someparam",
+            "2": "ACTION_NEW_SCREEN:Figth_someparam"
+        },
+        "NegButtonState": "D"
+    },
+    "0001": {
+        "IDnumber": "0001",
+        "Name": "second_template",
+        "RelatedEvents": [
+            "0000",
+            "0002"
+        ],
+        "Version": "01",
+        "ViewOrder": "01",
+        "BodyText": "second event body text",
+        "PosTitle": "Yes",
+        "PosFunctions": {
+            "1": "ACTION_NEW_SCREEN:Figth_someparam",
+            "2": "ACTION_NEW_SCREEN:Figth_otherparam"
+        },
+        "PosButtonState": "E",
+        "NegTitle": "No",
+        "NegFunctions": {
+            "1": "ACTION_NEW_SCREEN:Figth_cancel",
+            "2": "ACTION_NEW_SCREEN:Figth_cancel"
+        },
+        "NegButtonState": "E"
+    },
+    "0002": {
+        "IDnumber": "0002",
+        "Name": "followup_template",
+        "RelatedEvents": [
+            "0000"
+        ],
+        "Version": "01",
+        "ViewOrder": "02",
+        "BodyText": "follow up event text",
+        "PosTitle": "Attack",
+        "PosFunctions": {
+            "1": "ACTION_NEW_SCREEN:Figth_charge",
+            "2": "ACTION_NEW_SCREEN:Figth_finish"
+        },
+        "PosButtonState": "E",
+        "NegTitle": "Retreat",
+        "NegFunctions": {
+            "1": "ACTION_NEW_SCREEN:Figth_retreat",
+            "2": "ACTION_NEW_SCREEN:Figth_retreat"
+        },
+        "NegButtonState": "E"
+    }
 }

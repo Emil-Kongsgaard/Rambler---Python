@@ -39,7 +39,15 @@ class Figth_screen (Screen):
         # TODO: implement logic that asks Gamestate if buttons should be enabled or disabled based on players inventory
 
     def _load_images(self) -> None:
-        super()._load_images() #background
+        self.background_image = pygame.image.load(
+            Constants.Placeholder_img.value)
+        self.EnemyCenter = pygame.image.load(
+            Constants.main_enemy_plach.value)
+        self.side_enemy_1 = pygame.image.load(
+            Constants.side_enemy_plach.value)
+        self.side_enemy_2 = pygame.image.load(
+            Constants.side_enemy_plach.value)
+        
         return None
 
     
@@ -47,8 +55,8 @@ class Figth_screen (Screen):
         super()._render_images()
         return None
     
-    def render(self):
-        super().render()
+    def _render(self):
+        super()._render()
         # build rects 
         screen_rect = self.background_image.get_rect()
         gamefont = pygame.font.Font(Constants.FONT.value, 32)
@@ -60,11 +68,11 @@ class Figth_screen (Screen):
         for key in self.Buttons.keys():
             self.Buttons[key]["rect"] = pygame.Rect(0,0,(screen_rect.w * Constants.Button_width_multp.value),Constants.Buttons_y.value)
 
-        self.Buttons['Throw']['rect'].center = (int(screen_rect.w * 0.12),(screen_rect.h * 0.98))
-        self.Buttons['Heal']['rect'].center =int(screen_rect.w * 0.38),(screen_rect.h * 0.98)
+        self.Buttons['Throw']['rect'].center = (int(screen_rect.w * 0.14),(screen_rect.h * 0.98))
+        self.Buttons['Heal']['rect'].center = (int(screen_rect.w * 0.35 ),(screen_rect.h * 0.98))
 
-        self.Buttons['Hit_Fast']['rect'].center = (int(screen_rect.w * 0.64),(screen_rect.h * 0.98))
-        self.Buttons['Hit_Slow']['rect'].center = (int(screen_rect.w * 0.78),(screen_rect.h * 0.98))
+        self.Buttons['Hit_Fast']['rect'].center = (int(screen_rect.w * 0.71),(screen_rect.h * 0.98))
+        self.Buttons['Hit_Slow']['rect'].center = (int(screen_rect.w * 0.92),(screen_rect.h * 0.98))
 
         self.screen.fill(Constants.background_color.value)
         self._render_images()

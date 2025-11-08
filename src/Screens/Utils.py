@@ -124,26 +124,22 @@ class Buttons():
         return self.text_rect
 
 class TextBox():
-    def __init__(self,screen:pygame.Surface,Textevent) -> None:
+    def __init__(self,screen:pygame.Surface,Textevent:dict) -> None:
         self.screen = screen
+        # fix so that buttons are dependent on the text event passed. 
         self.Buttons = {"Positive_option": 
                       {"surface": self.screen, 
                        "rect": "rect", 
-                       "title": "Positive", 
-                       "function": lambda: print("positive"), 
-                       "state": Constants.ENABLED.value},
-                       "Go_to_Next_text": 
-                       {"surface": self.screen, 
-                       "rect": "rect", 
-                       "title": "More...", 
-                       "function": lambda: print("somefunction"), 
-                       "state": Constants.ENABLED.value},
+                       "title": Textevent['Positive_option_title'], 
+                       "function": Textevent['Postive_functions'], 
+                       "state": Textevent['Postive_button_state']
+                       },
                        "Negative_option": 
                        {"surface": self.screen, 
                        "rect": "rect", 
-                       "title": "negative", 
-                       "function": lambda: print("negative"), 
-                       "state": Constants.ENABLED.value}
+                       "title": Textevent['Negative_option_title'], 
+                       "function": Textevent['Negative_functions'], 
+                       "state": Textevent['Negative_button_state']}
                       }
         self.screen_rect = self.screen.get_rect()
         self.menu_y_dist = 90
