@@ -1,3 +1,5 @@
+import os
+import json
 import pygame
 from src.Screens.Utils import Screen, Buttons
 from src.constants import Constants
@@ -48,14 +50,56 @@ class CharSelect(Screen):
                                 }, 
                        "state": Constants.ENABLED.value},
                        }
-        # TODO: Implement some install-spefic logic that determines
-        # if the buttons should be disabled. 
-        # Eg, you have died as a farmer, now you can play as young soldier
+        # apply install / profile specific availability rules
+        self._apply_install_logic()
 
     def _load_images(self) -> None:
         self.background_image = pygame.image.load(
             Constants.Placeholder_img.value)
         return None
+
+    def _apply_install_logic(self) -> None:
+        """
+        Read a small player profile at data/player_profile.json (if present)
+        and modify button availability.
+
+        Supported profile keys (both optional):
+          - unlocked: list of titles that should be enabled (if present, only these enabled)
+          - dead: list of titles that should be disabled
+
+        If neither key exists, leave default button states unchanged.
+        """
+        try:
+            profile_path = os.path.join(os.getcwd(), "data", "player_profile.json")
+            if not os.path.isfile(profile_path):
+                return
+            with open(profile_path, "r", encoding="utf-8") as fh:
+                profile = json.load(fh)
+        except Exception:
+            # on error, leave defaults unchanged
+            return
+
+        unlocked = profile.get("unlocked")
+        dead = profile.get("dead")
+
+        # If unlocked list present: enable only those titles
+        if isinstance(unlocked, list):
+            unlocked_set = set(unlocked)
+            for btn in self.Buttons.values():
+                title = btn.get("title")
+                if title and title in unlocked_set:
+                    btn["state"] = Constants.ENABLED.value
+                else:
+                    btn["state"] = Constants.DISABLED.value
+            return
+
+        # Otherwise, if dead list present: disable those titles
+        if isinstance(dead, list):
+            dead_set = set(dead)
+            for btn in self.Buttons.values():
+                title = btn.get("title")
+                if title and title in dead_set:
+                    btn["state"] = Constants.DISABLED.value
     
     def _render(self) -> None:
         # build title rect 

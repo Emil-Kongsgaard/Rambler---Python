@@ -1,6 +1,7 @@
 import os
 from enum import Enum
 
+
 class Constants(Enum):
     #Exceptions:
     SYS_ERR = "SYSTEM ERROR"
@@ -12,10 +13,27 @@ class Constants(Enum):
 
     #TextEvent:
     NAME = "Name"
-    REL_EVENTS = "RelatedEvents" 
+    REL_EVENT = "RelatedEvents"
     VERSION = "Version"
-    V_ORDER ="ViewOrder"
+    CHARACTER = "Character"
+    DAY = "Day"
     B_TEXT = "BodyText"
+    POS_TITLE = 'Positive_option_title'
+    POS_FUNCS = 'Postive_functions'
+    POS_BUT_ST = 'Postive_button_state'
+    NEG_TITLE = 'Negative_option_title'
+    NEG_FUNCS = 'Negative_functions'
+    NEG_BUT_ST = 'Negative_button_state'
+
+    #TE Validations
+    NAMELENGTH = 20
+    IDNUMBERLENGTH = 4
+    VERSIONLENGTH = 2
+    VORDERLENGTH = 2
+    BODYTEXTLENGTH = 600
+
+    #TE actions
+    ACTION_NEW_SCREEN = "NEW_SCREEN"
 
     #Text
     FONT = os.path.join("Assets","DuBellay-4B1Y.ttf")
@@ -46,4 +64,10 @@ class Constants(Enum):
     MainMenu = "MainMenu"
     CharacterSel = "CharacterSelection"
     Figth = "Figth"
+    TextEventScreen = "TextEventScreen"
 
+
+
+    # Images:
+    main_enemy_plach = os.path.join("Assets","Main_enemy_300x400.png")
+    side_enemy_plach =  os.path.join("Assets","side_enemy_250x300.png")
