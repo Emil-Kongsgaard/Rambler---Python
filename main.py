@@ -2,10 +2,8 @@
 # this will handle the main game loop,
 # the switch between screens.
 # the actual endgame, gamewon, "save?game?" implementations. 
-from ast import Try
 import os
-from src.Screens.Show_TextEvent import TextEventScreen
-from src.Screens.Figth import Figth_screen 
+from src.Screens.Figth import Figth_screen
 from src.Screens.CharSelect import CharSelect
 import pygame
 from src.Screens.MainMenu import MainMenu
