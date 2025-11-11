@@ -1,6 +1,7 @@
 import os
 from enum import Enum
 
+
 class Constants(Enum):
     #Exceptions:
     SYS_ERR = "SYSTEM ERROR"
@@ -62,6 +63,8 @@ class Constants(Enum):
     MainMenu = "MainMenu"
     CharacterSel = "CharacterSelection"
     Figth = "Figth"
+    TextEventScreen = "TextEventScreen"
+
 
 
     # Images:

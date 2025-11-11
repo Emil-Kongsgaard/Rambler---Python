@@ -40,3 +40,6 @@ class TextEventScreen(Screen):
         self.screen.fill(C.background_color.value)
         self._render_images()
         self.textbox.render()
+
+if __name__ == "__main__":
+    pass
