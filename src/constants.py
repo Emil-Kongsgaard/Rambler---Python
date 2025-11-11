@@ -13,9 +13,10 @@ class Constants(Enum):
 
     #TextEvent:
     NAME = "Name"
-    REL_EVENTS = "RelatedEvents"
+    REL_EVENT = "RelatedEvents"
     VERSION = "Version"
-    V_ORDER = "ViewOrder"
+    CHARACTER = "Character"
+    DAY = "Day"
     B_TEXT = "BodyText"
     POS_TITLE = 'Positive_option_title'
     POS_FUNCS = 'Postive_functions'

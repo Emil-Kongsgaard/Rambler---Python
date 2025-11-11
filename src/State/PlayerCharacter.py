@@ -27,12 +27,7 @@ character = {
     },
     'Quests': ['Main quest'],
     
-
-
 }
-
-
-
 
 class Player(Character):
     def __init__(self,character:dict) -> None:

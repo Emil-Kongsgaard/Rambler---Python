@@ -1,16 +1,8 @@
-
-# action string:
-# 0-10 indicates the action of the button. NEW_SCREEN,LOAD_EVENT, etc.
-# 11-20 indicates parameters for the action.
-# e.g. for LOAD_EVENT, the event idnumber to load.
-# parameters are separated by underscores.
-
 from Screens.Utils import Screen
 from src.constants import Constants as C
 from src.Exceptions import TextEventError
 
-
-class TexteventActionHandler:
+class ActionHandler:
     """Handler that executes a textevent action string.
 
     Public contract:

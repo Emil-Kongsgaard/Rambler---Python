@@ -7,9 +7,8 @@ from src.constants import Constants as C
 {"0000":  # idnumber
  {
      C.NAME.value: "template",
-     C.REL_EVENTS.value: [],
+     C.REL_EVENT.value: [],
      C.VERSION.value: "00",
-     C.V_ORDER.value: "00",
      C.B_TEXT.value: "lorem ipsum....",
      C.POS_TITLE.value: 'Positive_option_title',
      C.POS_FUNCS.value: {   "1":   lambda: print("somefunction"),
@@ -38,9 +37,8 @@ class Validator ():
         for idnumber, event in text_event.items():
             self._validateString(idnumber, C.IDNUMBERLENGTH.value, "idnumber")
             self._validateString(event[C.NAME.value], C.NAMELENGTH.value, "name")
-            self._validateRelatedEvents(event[C.REL_EVENTS.value])
+            self._validateRelatedEvents(event[C.REL_EVENT.value])
             self._validateString(event[C.VERSION.value], C.VERSIONLENGTH.value, "version")
-            self._validateString(event[C.V_ORDER.value], C.VORDERLENGTH.value, "v_order")
             self._validateString(event[C.B_TEXT.value], C.BODYTEXTLENGTH.value, "body_text")
             self._validateFunctions(event[C.POS_FUNCS.value])
             self._validateButtonState(event[C.POS_BUT_ST.value])
