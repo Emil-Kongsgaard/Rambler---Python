@@ -13,7 +13,7 @@ class CharSelect(Screen):
                         {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Farmer", 
-                       "function":{ "1":   lambda: print("somefunction"),
+                       "function":{ "1":   lambda: self.notifyFetchPlayer("Farmer"),
                                     "2":   lambda: self.notifyLoadScreenRequested(Constants.Figth.value)
                                 }, 
                        "state": Constants.ENABLED.value},
@@ -21,7 +21,7 @@ class CharSelect(Screen):
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Young soldier", 
-                       "function": { "1":   lambda: print("somefunction"),
+                       "function": { "1":   lambda: self.notifyFetchPlayer("Young soldier"),
                                     "2":   lambda: self.notifyLoadScreenRequested(Constants.Figth.value)
                                 }, 
                        "state": Constants.ENABLED.value},
@@ -29,7 +29,7 @@ class CharSelect(Screen):
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Veteran Officer", 
-                       "function": { "1":   lambda: print("somefunction"),
+                       "function": { "1":   lambda: self.notifyFetchPlayer("Veteran Officer"),
                                     "2":   lambda: self.notifyLoadScreenRequested(Constants.Figth.value)
                                 }, 
                        "state": Constants.ENABLED.value},
@@ -37,7 +37,7 @@ class CharSelect(Screen):
                       {"surface": self.screen, 
                        "rect": "rect", 
                        "title": "Yx. Bounty Hunter", 
-                       "function": { "1":   lambda: print("somefunction"),
+                       "function": { "1":   lambda: self.notifyFetchPlayer("Yx. Bounty Hunter"),
                                     "2":   lambda: self.notifyLoadScreenRequested(Constants.Figth.value)
                                 }, 
                        "state": Constants.ENABLED.value},

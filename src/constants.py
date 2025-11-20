@@ -34,6 +34,7 @@ class Constants(Enum):
 
     #TE actions
     ACTION_NEW_SCREEN = "NEW_SCREEN"
+    ACTION_CHANGE_VALUE = "CHANGE_VAL"
 
     #Text
     FONT = os.path.join("Assets","DuBellay-4B1Y.ttf")

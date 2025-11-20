@@ -1,12 +1,9 @@
 
 import json
 import os
-#from regex import regex as re
 from src.Exceptions import TextEventError
 from src.constants import Constants as C
 
-
-# here is sample text event
 # here is sample text event
 {"0000":  # idnumber
  {
@@ -163,57 +160,50 @@ class CurrentNumberCache:
             raise TextEventError(errors=C.SYS_ERR.value,
                                  message="Input must be a number")
 
-
-
-class TextEvent(JSONFileHandling):
-    def __init__(self) -> None:
-        super().__init__()
-
-    def get(self,idnumber:str | None = None) -> dict:
-        """
-        Method to get text events. 
-        If idnumber is provided, will return single text event dict.
-        Raises TextEventError on error.
-        Output is dict of text events or single text event dict.
-        """
-        if idnumber is not None:
-            all_events = self._from_json()
-            if idnumber in all_events:
-                return all_events[idnumber]
-            else:
-                raise TextEventError(errors=C.SYS_ERR.value,
+def get(idnumber:str | None = None) -> dict:
+    """
+    Retreives all text events or single text event by IDnumber.
+    If idnumber is provided, will return single text event dict.
+    Raises TextEventError on error.
+    Output is dict of text events or single text event dict.
+    """
+    if idnumber is not None:
+        all_events = JSONFileHandling()._from_json()
+        if idnumber in all_events:
+            return all_events[idnumber]
+        else:
+            raise TextEventError(errors=C.SYS_ERR.value,
                                      message=f"Text event with IDnumber {idnumber} does not exist.")
-        return self._from_json()
+    return JSONFileHandling()._from_json()
 
     # implement saveing text events to json file later. 
     # reuse implementation from TextEvent.py
-    def save(self,*args) -> None:
-        """
-        Method will check if parameters are list of dicts or list of events
-        Will perform validations on the text events before saving.
-        pass valid textevents on to appropriate internal method.
-        Raises TextEventError on error.
-        Output is None on success.
-        """
-        if len(args) == 1 and isinstance(args[0], list):
-            list_of_events = args[0]
-            if all(isinstance(event, dict) for event in list_of_events):
-                return self.save_multiple(list_of_events)
-            else:
-                raise TextEventError(errors=C.SYS_ERR.value,
-                                     message="All items in the list must be dicts representing text events.")
-        elif len(args) == 1 and isinstance(args[0], dict):
-            text_events_dict = args[0]
-            return self.update_multiple(text_events_dict)
+
+def save(self,*args) -> None:
+    """
+    Method will check if parameters are list of dicts or list of events
+    Will perform validations on the text events before saving.
+    pass valid textevents on to appropriate internal method.
+    Raises TextEventError on error.
+    Output is None on success.
+    """
+    if len(args) == 1 and isinstance(args[0], list):
+        list_of_events = args[0]
+        if all(isinstance(event, dict) for event in list_of_events):
+            return self.save_multiple(list_of_events)
         else:
             raise TextEventError(errors=C.SYS_ERR.value,
+                                  message="All items in the list must be dicts representing text events.")
+    elif len(args) == 1 and isinstance(args[0], dict):
+        text_events_dict = args[0]
+        return self.update_multiple(text_events_dict)
+    else:
+        raise TextEventError(errors=C.SYS_ERR.value,
                                  message="Invalid arguments provided to save method.")
 
 
 if __name__ == '__main__':
     print("main")
-    textevent = TextEvent()
-    listevents = textevent.get()
-    print(listevents)
+
 
 

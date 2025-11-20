@@ -1,6 +1,8 @@
+from tkinter import N
 from typing import Text
+from src.State.Character import Player
 from src.constants import Constants as C
-from src.TextEvents.TextEvent import TextEvent
+import src.TextEvents.TextEvent as TextEvent
 {"0000":  # idnumber
  {
      C.NAME.value: "template",
@@ -24,10 +26,10 @@ from src.TextEvents.TextEvent import TextEvent
 
 class StateofGame ():
     def __init__(self) -> None:
-        self.Texteventobj = TextEvent()
         self.player_char_type = ""
         self.no_days_passed = 0
-        self.TextEventsdict = self.Texteventobj.get()
+        self.TextEventsPool = TextEvent.get()
+        self.player: Player 
         pass
     def pulltextevent(self, last_screen:str, ID:str|None=None) -> dict|None:
         # if we come from character selection screen, we need to load the first text event for that character
@@ -35,29 +37,29 @@ class StateofGame ():
         # if ID is not none, we pull based on ID
         #step 1
         if ID is not None:
-            for id, data in self.TextEventsdict.items():
+            for id, data in self.TextEventsPool.items():
                 if id == ID:
                     return data        
         #step 2    
         ids = []
         if last_screen == C.CharacterSel.value:
-            for id, data in self.TextEventsdict.items():
+            for id, data in self.TextEventsPool.items():
                 if data[C.CHARACTER.value] == self.player_char_type and data[C.DAY.value] == "0":
                     ids.append(id)  
             ids.sort()
             if len(ids) > 0:
-                for id, data in self.TextEventsdict.items():
+                for id, data in self.TextEventsPool.items():
                     if id == ids[0]:
                         return data
         ids.clear()
 
         #step 3
-        for id, data in self.TextEventsdict.items():
+        for id, data in self.TextEventsPool.items():
             if data[C.CHARACTER.value] == self.player_char_type and data[C.DAY.value] == str(self.no_days_passed):
                 ids.append(id)  
             ids.sort()
             if len(ids) > 0:
-                for id, data in self.TextEventsdict.items():
+                for id, data in self.TextEventsPool.items():
                     if id == ids[0]:
                         return data
         pass

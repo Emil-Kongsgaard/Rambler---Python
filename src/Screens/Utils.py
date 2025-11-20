@@ -1,10 +1,10 @@
 from operator import ne
 import pygame
-from src.Mode.GameEventManager import EventManager
+from src.Mode.GameEventManager import EventGenerator
 from src.constants import Constants as C
 from src.Exceptions import UIError
 
-class Screen(EventManager):
+class Screen(EventGenerator):
     """
     Abstract class that handles all the common functionality between all screens
     """
@@ -205,8 +205,8 @@ class TextBox():
         words = self.body_text.split(' ')
         lines = []
         current = ""
-        for w in words:
-            test = (current + " " + w) if current else w
+        for word in words:
+            test = (current + " " + word) if current else word
             test_w, _ = font.size(test)
             if test_w <= max_text_width:
                 current = test
@@ -214,21 +214,21 @@ class TextBox():
                 if current:
                     lines.append(current)
                 # if single word too long, break it by characters with hyphenation
-                if font.size(w)[0] > max_text_width:
+                if font.size(word)[0] > max_text_width:
                     part = ""
-                    for ch in w:
-                        testp = part + ch
+                    for charachter in word:
+                        testp = part + charachter
                         if font.size(testp)[0] <= max_text_width:
                             part = testp
                         else:
                             lines.append(part + "-")
-                            part = ch
+                            part = charachter
                     if part:
                         current = part
                     else:
                         current = ""
                 else:
-                    current = w
+                    current = word
         if current:
             lines.append(current)
 

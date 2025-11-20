@@ -7,12 +7,13 @@ from src.Screens.Figth import Figth_screen
 from src.Screens.CharSelect import CharSelect
 import pygame
 from src.Screens.MainMenu import MainMenu
-from src.Mode.GamePlayer import GamePlayer
+from src.Mode.GamePlayer import EventObserver
 from src.constants import Constants as C
 from src.State.Gamestate import StateofGame
+import src.State.Character as Character
 
 
-class MainGameLoop(GamePlayer):
+class MainGameLoop(EventObserver):
     def __init__(self) -> None:
         self.init_ui()
         self.gamestate = StateofGame()
@@ -52,7 +53,7 @@ class MainGameLoop(GamePlayer):
         self.running = False
         return None
     
-    def loadScreenRequested(self,screen_name:str):
+    def loadScreenRequested(self,screen_name:str, TextEventID:str|None=None):
         match screen_name:
             case C.MainMenu.value:
                 pass 
@@ -64,18 +65,29 @@ class MainGameLoop(GamePlayer):
                 self.Figth = Figth_screen(self.screen)
                 self.Figth.addObserver(self)
             case C.TextEventScreen.value:
-                    TEdata = self.gamestate.pulltexteventfromqueue(self.current_screen)
-                    if TEdata is not None:
-                        self.TEScreen = TextEventScreen(self.screen, TEdata)
-                        self.TEScreen.addObserver(self)
-                    else:
-                        pass   
+                TEdata = self.gamestate.pulltextevent(self.current_screen, TextEventID)
+                if TEdata is not None:
+                    self.TEScreen = TextEventScreen(self.screen, TEdata)
+                    self.TEScreen.addObserver(self)
+                else:
+                    pass   
             case _:
                 pass
         
         self.current_screen = screen_name
+        return None
 
+    def changeValueRequested(self, key:str, value:int):
+        self.gamestate.player.changevalue(key, value)
+        pass
     
+    def dayPassed(self):
+        self.gamestate.advance_day()
+        pass
+    def fetchPlayer(self,player_type:str):
+        self.gamestate.player = Character.GetPlayer(player_type)
+        self.gamestate.set_character_type(player_type)
+        pass
 
 if __name__ == '__main__':
     game = MainGameLoop()

@@ -1,26 +1,8 @@
 import pygame
 from src.Screens.Utils import Screen, TextBox
 from src.constants import Constants as C
+import src.TextEvents.ActionHandler as ActionHandler
 
-# here is sample text event
-{"0000":  # idnumber
- {
-     C.NAME.value: "template",
-     C.REL_EVENTS.value: [],
-     C.VERSION.value: "00",
-     C.V_ORDER.value: "00",
-     C.B_TEXT.value: "lorem ipsum....",
-     C.POS_TITLE.value: 'Positive_option_title',
-     C.POS_FUNCS.value: {   "1":   f"{C.ACTION_NEW_SCREEN.value}{C.Figth.value}_someparam",
-                            "2":   f"{C.ACTION_NEW_SCREEN.value}{C.Figth.value}_someparam"
-                        },
-     C.POS_BUT_ST.value: 'Postive_button_state',
-     C.NEG_TITLE.value: 'Negative_option_title',
-     C.NEG_FUNCS.value: {   "1":   f"{C.ACTION_NEW_SCREEN.value}{C.Figth.value}_someparam",
-                            "2":   f"{C.ACTION_NEW_SCREEN.value}{C.Figth.value}_someparam"
-                        },
-     C.NEG_BUT_ST.value: 'Negative_button_state'
- }} # pyright: ignore[reportUnusedExpression]
 
 class TextEventScreen(Screen):
     def __init__(self, screen: pygame.Surface, text_event: dict):
@@ -41,5 +23,19 @@ class TextEventScreen(Screen):
         self._render_images()
         self.textbox.render()
 
+    def _handle_button_click(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for key in self.Buttons.keys():
+                if self.Buttons[key]["state"] == C.DISABLED.value:
+                    continue
+                if self.Buttons[key]["rect"].collidepoint(pygame.mouse.get_pos()): 
+                        for func_key in  self.Buttons[key]["function"].keys():
+                            #when dealing with textevents the function dict contains a string that needs to be parsed with internal logic in action handler. 
+                            ActionHandler.Handle(
+                            self.Buttons[key]["function"][func_key],#action string
+                            self #screen for executing the action
+                            )
+
+    
 if __name__ == "__main__":
     pass
